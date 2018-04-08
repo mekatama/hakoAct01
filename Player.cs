@@ -11,12 +11,14 @@ public class Player : MonoBehaviour {
 	private Vector3 targetPosition;		//移動する位置
 	private Vector3 velocity;			//速度
 	private float moveSpeed = 1.5f;		//移動スピード
+	public bool isWalk;					//移動flag
 
 	void Start () {
 		characterController = GetComponent<CharacterController>();	//コンポーネントを取得
 		animator = GetComponent<Animator>();	//コンポーネントを取得
 		targetPosition = transform.position;	//playerの位置
 		velocity = Vector3.zero;				//0ベクトル
+		isWalk = false;							//移動flag初期化
 	}
 
 	void Update () {
@@ -37,6 +39,9 @@ public class Player : MonoBehaviour {
 				var moveDirection = (targetPosition - transform.position).normalized;
 				velocity = new Vector3(moveDirection.x * moveSpeed, velocity.y, moveDirection.z * moveSpeed);
 				transform.LookAt(transform.position + new Vector3(moveDirection.x, 0, moveDirection.z));
+				isWalk = true;	//移動flag on
+			}else{
+				isWalk = false;	//移動flag off
 			}
 		}
 		//地上にいない時
@@ -46,5 +51,7 @@ public class Player : MonoBehaviour {
 
 		//移動実行
 		characterController.Move(velocity * Time.deltaTime);
+		//animation制御
+		animator.SetBool("isWalk", isWalk);	
 	}
 }
