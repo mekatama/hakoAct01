@@ -6,25 +6,89 @@ public class GameController : MonoBehaviour {
 	public int num_coin = 0;	//coinの数
 	public int clear_coin = 2;	//clearに必要なコイン数
 	public bool isClear;		//clear flag
+	public bool isClearCoin;	//
 	public float timeCount;		//play時間
+	public bool inGoal;			//goal侵入flag
+
+	//ゲームステート
+	enum State{
+		Ready,		//deno
+		Play,		//inGame
+		GoalOpen,	//
+		Clear,		//
+		AllClear	//
+	}
+	State state;
 
 	public Canvas clearCamvas;	//clear
 
 	void Start () {
 		isClear = false;				//初期化
+		isClearCoin = false;				//初期化
+		inGoal = false;					//初期化
 		clearCamvas.enabled = false;	//StartUI非表示
+		Ready();						//ステート変更
 	}
-	
-	void Update () {
-		//timeカウント
-		timeCount += Time.deltaTime;	//play時間の保存
-		Debug.Log(timeCount);
-
-		//クリア判定
-		if(clear_coin == num_coin){
-			clearCamvas.enabled = true;	//StartUI表示
-			isClear = true;				//clear flag on
+	void LateUpdate () {
+		//ステートの制御
+		switch(state){
+			//demo
+			case State.Ready:
+				Debug.Log("State.Ready");
+				Play();							//ステート変更
+				break;
+			//
+			case State.Play:
+				Debug.Log("State.Play");
+				//coin判定
+				if(clear_coin == num_coin){
+					isClearCoin = true;
+					GoalOpen();							//ステート変更
+				}
+				break;
+			//
+			case State.GoalOpen:
+				Debug.Log("State.GoalOpen");
+				//判定
+				if(inGoal == true){
+					Clear();							//ステート変更
+				}
+				break;
+			//
+			case State.Clear:
+				clearCamvas.enabled = true;	//clearUI表示
+				isClear = true;				//clear flag on
+				Debug.Log("State.Clear");
+				break;
+			//
+			case State.AllClear:
+				Debug.Log("State.AllClear");
+				break;
 		}
-//		Debug.Log("coin;" + num_coin);
+	}	
+
+	void Update () {
+		//timeカウント(clearで停止)
+		if(isClear == false){
+			timeCount += Time.deltaTime;	//play時間の保存
+		}
+//		Debug.Log("inGoal;" + inGoal);
 	}
+
+	void Ready(){
+		state = State.Ready;
+	}
+	void Play(){
+		state = State.Play;
+	}
+	void GoalOpen(){
+		state = State.GoalOpen;
+	}
+	void Clear(){
+		state = State.Clear;
+	}
+	void AllClear(){
+		state = State.AllClear;
+	}
+
 }
