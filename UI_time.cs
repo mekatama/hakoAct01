@@ -7,15 +7,6 @@ public class UI_time : MonoBehaviour {
 	public GameObject gameController;	//GameController取得
 	public Text timeText;				//Textコンポーネント取得用
 
-	//ゲームステート
-	enum State{
-		Ready,
-		Play,
-		Result,
-		AllResult
-	}
-	State state;
-
 	void Update () {
 		//gcって仮の変数にGameControllerのコンポーネントを入れる
 		GameController gc = gameController.GetComponent<GameController>();
