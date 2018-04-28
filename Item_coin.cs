@@ -11,6 +11,11 @@ public class Item_coin : MonoBehaviour {
 		gameController = GameObject.FindWithTag ("GameController");		//GameControllerオブジェクトを探す
 	}
 
+	void Update(){
+		//coin毎フレーム回転
+		transform.Rotate(new Vector3(0.0f, 0.0f, 5.0f));
+	}
+
 	//他のオブジェクトとの当たり判定
 	void OnTriggerEnter(Collider other) {
 		if(other.tag == "Player"){
