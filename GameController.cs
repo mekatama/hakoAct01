@@ -44,10 +44,7 @@ public class GameController : MonoBehaviour {
 			//demo
 			case State.Ready:
 				time += Time.deltaTime;		//demo camera 再生時間増やす
-
-				//ここにカメラ移動処理入れたい
-
-				if(time > 1.0f){			//1秒でin game に移行
+				if(time > 2.0f){			//1秒でin game に移行
 					Play();					//ステート変更
 				}
 				Debug.Log("State.Ready");
