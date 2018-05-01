@@ -10,6 +10,10 @@ public class GameController : MonoBehaviour {
 	public float timeCount;		//play時間
 	public bool inGoal;			//goal侵入flag
 
+	private GameObject MainCam;	//mein camera
+	private GameObject SubCam;	//sub camera
+	private float time = 0.0f;	//demo cameraの再生時間
+
 	//ゲームステート
 	enum State{
 		Ready,		//deno
@@ -24,9 +28,14 @@ public class GameController : MonoBehaviour {
 
 	void Start () {
 		isClear = false;				//初期化
-		isClearCoin = false;				//初期化
+		isClearCoin = false;			//初期化
 		inGoal = false;					//初期化
 		clearCamvas.enabled = false;	//StartUI非表示
+
+		MainCam = GameObject.Find("Main Camera");
+		SubCam = GameObject.Find("Sub Camera");
+		MainCam.SetActive(false);		//main camera off
+
 		Ready();						//ステート変更
 	}
 	void LateUpdate () {
@@ -34,11 +43,21 @@ public class GameController : MonoBehaviour {
 		switch(state){
 			//demo
 			case State.Ready:
+				time += Time.deltaTime;		//demo camera 再生時間増やす
+
+				//ここにカメラ移動処理入れたい
+
+				if(time > 1.0f){			//1秒でin game に移行
+					Play();					//ステート変更
+				}
 				Debug.Log("State.Ready");
-				Play();							//ステート変更
 				break;
 			//
 			case State.Play:
+				//カメラ切り替え
+				MainCam.SetActive (true);	//main camera on
+				SubCam.SetActive (false);	//sub camera off
+
 				Debug.Log("State.Play");
 				//coin判定
 				if(clear_coin == num_coin){
@@ -72,7 +91,6 @@ public class GameController : MonoBehaviour {
 		if(isClear == false){
 			timeCount += Time.deltaTime;	//play時間の保存
 		}
-//		Debug.Log("inGoal;" + inGoal);
 	}
 
 	void Ready(){
