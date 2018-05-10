@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 	public int num_coin = 0;	//coinの数
@@ -9,10 +11,14 @@ public class GameController : MonoBehaviour {
 	public bool isClearCoin;	//
 	public float timeCount;		//play時間
 	public bool inGoal;			//goal侵入flag
+	public bool isInPut;		//入力許可flag
 
 	private GameObject MainCam;	//mein camera
 	private GameObject SubCam;	//sub camera
 	private float time = 0.0f;	//demo cameraの再生時間
+
+	public Canvas clearCamvas;	//UI clear
+	public Canvas inGameCamvas;	//UI inGame
 
 	//ゲームステート
 	enum State{
@@ -24,13 +30,14 @@ public class GameController : MonoBehaviour {
 	}
 	State state;
 
-	public Canvas clearCamvas;	//clear
 
 	void Start () {
 		isClear = false;				//初期化
 		isClearCoin = false;			//初期化
 		inGoal = false;					//初期化
-		clearCamvas.enabled = false;	//StartUI非表示
+		isInPut = false;				//初期化
+		clearCamvas.enabled = false;	//UI非表示
+		inGameCamvas.enabled = false;	//UI非表示
 
 		MainCam = GameObject.Find("Main Camera");
 		SubCam = GameObject.Find("Sub Camera");
@@ -45,12 +52,14 @@ public class GameController : MonoBehaviour {
 			case State.Ready:
 				time += Time.deltaTime;		//demo camera 再生時間増やす
 				if(time > 2.0f){			//1秒でin game に移行
+					isInPut = true;
 					Play();					//ステート変更
 				}
 				Debug.Log("State.Ready");
 				break;
 			//
 			case State.Play:
+				inGameCamvas.enabled = true;	//UI表示
 				//カメラ切り替え
 				MainCam.SetActive (true);	//main camera on
 				SubCam.SetActive (false);	//sub camera off
@@ -67,13 +76,15 @@ public class GameController : MonoBehaviour {
 				Debug.Log("State.GoalOpen");
 				//判定
 				if(inGoal == true){
+					isInPut = false;
 					Clear();							//ステート変更
 				}
 				break;
 			//
 			case State.Clear:
-				clearCamvas.enabled = true;	//clearUI表示
-				isClear = true;				//clear flag on
+				inGameCamvas.enabled = false;	//UI非表示
+				clearCamvas.enabled = true;		//clearUI表示
+				isClear = true;					//clear flag on
 				Debug.Log("State.Clear");
 				break;
 			//
@@ -104,6 +115,11 @@ public class GameController : MonoBehaviour {
 	}
 	void AllClear(){
 		state = State.AllClear;
+	}
+
+	//タイトル画面に戻るボタン用の制御関数
+	public void OnTitleButtonClicked(){
+		SceneManager.LoadScene("Title");	//シーンのロード
 	}
 
 }
