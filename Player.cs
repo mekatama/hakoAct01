@@ -16,8 +16,11 @@ public class Player : MonoBehaviour {
 
 	AudioSource audioSource;			//AudioSourceコンポーネント取得用
 	public AudioClip audioClipCoin;		//coin SE
+	public AudioClip audioClipGoalOpen;	//goal open SE
 	public AudioClip audioClipClear;	//clear SE
 	private bool onceClearCoin;			//一回だけ処理用
+	private bool onceGoalOpen;			//一回だけ処理用
+	private float time = 0.0f;			//goal open SEのディレイ再生時間
 
 	void Start () {
 		characterController = GetComponent<CharacterController>();	//コンポーネントを取得
@@ -27,6 +30,7 @@ public class Player : MonoBehaviour {
 		isWalk = false;							//移動flag初期化
 		audioSource = gameObject.GetComponent<AudioSource>();		//AudioSourceコンポーネント取得
 		onceClearCoin = false;					//初期化
+		onceGoalOpen = false;					//初期化
 	}
 
 	void Update () {
@@ -68,6 +72,18 @@ public class Player : MonoBehaviour {
 			isWalk = false;	//移動flag off
 		}
 		animator.SetBool("isWalk", isWalk);		//animation制御
+
+		//goalopen flag on判定
+		if(gc.isClearCoin){
+			if(onceGoalOpen == false){
+				time += Time.deltaTime;
+				if(time > 0.5f){							//0.5秒で移行
+					audioSource.clip = audioClipGoalOpen;	//SE決定
+					audioSource.Play ();					//SE再生
+					onceGoalOpen = true;
+				}
+			}
+		}
 
 		//goal侵入flag onで
 		if(gc.inGoal){
