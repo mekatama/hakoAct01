@@ -8,7 +8,7 @@ public class GameController : MonoBehaviour {
 	public int num_coin = 0;	//coinの数
 	public int clear_coin = 2;	//clearに必要なコイン数
 	public bool isClear;		//clear flag
-	public bool isClearCoin;	//
+	public bool isClearCoin;	//goal open flag
 	public float timeCount;		//play時間
 	public bool inGoal;			//goal侵入flag
 	public bool isInPut;		//入力許可flag
