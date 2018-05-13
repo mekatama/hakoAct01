@@ -18,9 +18,11 @@ public class Player : MonoBehaviour {
 	public AudioClip audioClipCoin;		//coin SE
 	public AudioClip audioClipGoalOpen;	//goal open SE
 	public AudioClip audioClipClear;	//clear SE
+	public AudioClip audioClipWalk;		//walk SE
 	private bool onceClearCoin;			//一回だけ処理用
 	private bool onceGoalOpen;			//一回だけ処理用
 	private float time = 0.0f;			//goal open SEのディレイ再生時間
+	private float walkTime = 0.0f;		//walk SEの一定時間毎再生制御
 
 	void Start () {
 		characterController = GetComponent<CharacterController>();	//コンポーネントを取得
@@ -55,6 +57,15 @@ public class Player : MonoBehaviour {
 				velocity = new Vector3(moveDirection.x * moveSpeed, velocity.y, moveDirection.z * moveSpeed);
 				transform.LookAt(transform.position + new Vector3(moveDirection.x, 0, moveDirection.z));
 				isWalk = true;	//移動flag on
+
+			//移動用のSE再生
+			walkTime += Time.deltaTime;
+			if(walkTime > 0.2f){						//1.0秒で移行
+				audioSource.clip = audioClipWalk;		//SE決定
+				audioSource.Play ();					//SE再生
+				walkTime = 0.0f;						//初期化
+			}
+
 			}else{
 				isWalk = false;	//移動flag off
 			}
