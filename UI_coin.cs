@@ -10,7 +10,12 @@ public class UI_coin : MonoBehaviour {
 	void Update () {
 		//gcって仮の変数にGameControllerのコンポーネントを入れる
 		GameController gc = gameController.GetComponent<GameController>();
-		//coin数表示
-		coinText.text = gc.num_coin.ToString("00") + "/" + gc.clear_coin.ToString("00");
+		if(gc.isClearCoin){
+			//go goal表示
+			coinText.text = "GO GOAL !!";
+		}else{
+			//coin数表示
+			coinText.text = gc.num_coin.ToString("00") + "/" + gc.clear_coin.ToString("00");
+		}
 	}
 }
