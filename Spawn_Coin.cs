@@ -23,7 +23,7 @@ public class Spawn_Coin : MonoBehaviour {
 			int index = Random.Range(0, numbers.Count);
 			//乱数を取り出す
 			ransu = numbers[index];
-			Debug.Log(ransu);
+//			Debug.Log(ransu);
 			//取り出した数値を削除。これで重複しなくなる
  			numbers.RemoveAt(index);
 			CoinGo();			//関数呼び出し
