@@ -12,6 +12,8 @@ public class GameController : MonoBehaviour {
 	public float timeCount;		//play時間
 	public bool inGoal;			//goal侵入flag
 	public bool isInPut;		//入力許可flag
+	private bool isTimeCount;	//時間開始flag
+	public float highScoreTime;	//ハイスコア
 
 	private GameObject MainCam;	//mein camera
 	private GameObject SubCam;	//sub camera
@@ -36,12 +38,16 @@ public class GameController : MonoBehaviour {
 		isClearCoin = false;			//初期化
 		inGoal = false;					//初期化
 		isInPut = false;				//初期化
+		isTimeCount = false;			//初期化
 		clearCamvas.enabled = false;	//UI非表示
 		inGameCamvas.enabled = false;	//UI非表示
 
 		MainCam = GameObject.Find("Main Camera");
 		SubCam = GameObject.Find("Sub Camera");
 		MainCam.SetActive(false);		//main camera off
+
+		//HighScoreがなかったら０を入れて初期化
+		highScoreTime =	PlayerPrefs.GetFloat("HighScore", 100f); 
 
 		Ready();						//ステート変更
 	}
@@ -50,18 +56,20 @@ public class GameController : MonoBehaviour {
 		switch(state){
 			//demo
 			case State.Ready:
+				Debug.Log("Load : " + highScoreTime);
 				time += Time.deltaTime;		//demo camera 再生時間増やす
 				if(time > 2.0f){			//1秒でin game に移行
 					isInPut = true;
 					Play();					//ステート変更
 				}
-				Debug.Log("State.Ready");
 				break;
 			//
 			case State.Play:
 				inGameCamvas.enabled = true;	//UI表示
+				isTimeCount = true;				//時間開始
 				//カメラ切り替え
 				MainCam.SetActive (true);	//main camera on
+				Debug.Log("State.Ready");
 				SubCam.SetActive (false);	//sub camera off
 
 				Debug.Log("State.Play");
@@ -82,9 +90,16 @@ public class GameController : MonoBehaviour {
 				break;
 			//
 			case State.Clear:
+				Debug.Log("clear time : " + timeCount);
+				//ハイスコア判定
+				if(highScoreTime > timeCount){
+					HighScore();					//ハイスコア処理関数
+				}
+
 				inGameCamvas.enabled = false;	//UI非表示
 				clearCamvas.enabled = true;		//clearUI表示
 				isClear = true;					//clear flag on
+
 				Debug.Log("State.Clear");
 				break;
 			//
@@ -96,8 +111,10 @@ public class GameController : MonoBehaviour {
 
 	void Update () {
 		//timeカウント(clearで停止)
-		if(isClear == false){
-			timeCount += Time.deltaTime;	//play時間の保存
+		if(isTimeCount){
+			if(isClear == false){
+				timeCount += Time.deltaTime;	//play時間の保存
+			}
 		}
 	}
 
@@ -115,6 +132,13 @@ public class GameController : MonoBehaviour {
 	}
 	void AllClear(){
 		state = State.AllClear;
+	}
+
+	void HighScore(){
+//		highScoreCamvas.enabled = true;						//highScoreUI表示
+		highScoreTime = timeCount;							//ハイスコア更新
+		PlayerPrefs.SetFloat("HighScore", highScoreTime);	//save
+		Debug.Log("HighScore更新:" + highScoreTime);
 	}
 
 	//タイトル画面に戻るボタン用の制御関数
