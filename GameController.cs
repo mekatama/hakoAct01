@@ -19,8 +19,9 @@ public class GameController : MonoBehaviour {
 	private GameObject SubCam;	//sub camera
 	private float time = 0.0f;	//demo cameraの再生時間
 
-	public Canvas clearCamvas;	//UI clear
-	public Canvas inGameCamvas;	//UI inGame
+	public Canvas clearCamvas;		//UI clear
+	public Canvas inGameCamvas;		//UI inGame
+	public Canvas highScoreCamvas;	//UI hiScore
 
 	//ゲームステート
 	enum State{
@@ -34,13 +35,14 @@ public class GameController : MonoBehaviour {
 
 
 	void Start () {
-		isClear = false;				//初期化
-		isClearCoin = false;			//初期化
-		inGoal = false;					//初期化
-		isInPut = false;				//初期化
-		isTimeCount = false;			//初期化
-		clearCamvas.enabled = false;	//UI非表示
-		inGameCamvas.enabled = false;	//UI非表示
+		isClear = false;					//初期化
+		isClearCoin = false;				//初期化
+		inGoal = false;						//初期化
+		isInPut = false;					//初期化
+		isTimeCount = false;				//初期化
+		clearCamvas.enabled = false;		//UI非表示
+		inGameCamvas.enabled = false;		//UI非表示
+		highScoreCamvas.enabled = false;	//UI非表示
 
 		MainCam = GameObject.Find("Main Camera");
 		SubCam = GameObject.Find("Sub Camera");
@@ -138,6 +140,7 @@ public class GameController : MonoBehaviour {
 //		highScoreCamvas.enabled = true;						//highScoreUI表示
 		highScoreTime = timeCount;							//ハイスコア更新
 		PlayerPrefs.SetFloat("HighScore", highScoreTime);	//save
+		highScoreCamvas.enabled = true;						//UI表示
 		Debug.Log("HighScore更新:" + highScoreTime);
 	}
 
