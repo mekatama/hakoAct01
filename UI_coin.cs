@@ -12,7 +12,7 @@ public class UI_coin : MonoBehaviour {
 		GameController gc = gameController.GetComponent<GameController>();
 		if(gc.isClearCoin){
 			//go goal表示
-			coinText.text = "GO GOAL !!";
+			coinText.text = "OK!!";
 		}else{
 			//coin数表示
 			coinText.text = gc.num_coin.ToString("00") + "/" + gc.clear_coin.ToString("00");
